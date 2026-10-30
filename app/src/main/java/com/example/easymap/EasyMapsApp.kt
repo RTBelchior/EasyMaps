@@ -12,7 +12,7 @@ class EasyMapsApp : Application() {
         super.onCreate()
         val osmConfig = Configuration.getInstance()
         osmConfig.load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
-        osmConfig.userAgentValue = packageName
+        osmConfig.userAgentValue = "EasyMaps/1.0 (projeto academico PWDAM - UPS; Android)"
         osmConfig.osmdroidBasePath = File(cacheDir, "osmdroid")
         osmConfig.osmdroidTileCache = File(cacheDir, "osmdroid/tiles")
         NotificationHelper.createChannels(this)

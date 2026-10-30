@@ -15,7 +15,7 @@ import com.example.easymap.util.Formatters
 import com.example.easymap.util.MarkerIcons
 import com.example.easymap.util.applySystemBarsPadding
 import kotlinx.coroutines.launch
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import com.example.easymap.util.MapTiles
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
@@ -33,7 +33,7 @@ class TripDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.root.applySystemBarsPadding()
 
-        binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
+        binding.mapView.setTileSource(MapTiles.source)
         binding.mapView.setMultiTouchControls(true)
 
         val tripId = intent.getLongExtra(EXTRA_TRIP_ID, -1L)
