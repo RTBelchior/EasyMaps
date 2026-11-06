@@ -209,6 +209,7 @@ class MapFragment : Fragment() {
             .putExtra(ReportActivity.EXTRA_LATITUDE, latitude)
             .putExtra(ReportActivity.EXTRA_LONGITUDE, longitude)
             .putExtra(ReportActivity.EXTRA_CATEGORY, category?.name)
+            .putExtra(ReportActivity.EXTRA_SPEED, TripTracker.snapshot.value.speedKmh)
         startActivity(intent)
     }
 

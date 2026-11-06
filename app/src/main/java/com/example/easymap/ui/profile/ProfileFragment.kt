@@ -1,6 +1,7 @@
 package com.example.easymap.ui.profile
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.easymap.data.AppDatabase
@@ -23,7 +25,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-/** Perfil: consultar/editar nome, fotografia de perfil (câmara), estado da sincronização e terminar sessão. */
+/**
+ * Ecrã de Perfil com avatar de iniciais / fotografia personalizada,
+ * campos de edição de nome, e-mail estático, estado de sincronização e logout.
+ */
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
@@ -43,8 +48,11 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val user = auth.currentUser ?: return
+
         binding.etName.setText(user.displayName ?: "")
-        binding.tvEmail.text = "Email: ${user.email}"
+        binding.tvEmail.text = user.email ?: ""
+
+        updateInitials(user.displayName ?: "", user.email ?: "")
         showAvatar()
 
         binding.btnPhoto.setOnClickListener {
@@ -53,35 +61,74 @@ class ProfileFragment : Fragment() {
             photoUri = uri
             takePicture.launch(uri)
         }
-        binding.btnSave.setOnClickListener { saveName() }
-        binding.btnSync.setOnClickListener {
+
+        binding.cardSync.setOnClickListener {
             SyncWorker.enqueue(requireContext())
             Toast.makeText(requireContext(), "Sincronização agendada.", Toast.LENGTH_SHORT).show()
+            checkSyncStatus()
         }
+
+        binding.btnSave.setOnClickListener { saveName() }
         binding.btnLogout.setOnClickListener { logout() }
     }
 
     override fun onResume() {
         super.onResume()
+        checkSyncStatus()
+    }
+
+    private fun checkSyncStatus() {
         val userId = auth.currentUser?.uid ?: return
         viewLifecycleOwner.lifecycleScope.launch {
-            val pending = withContext(Dispatchers.IO) { AppDatabase.get(requireContext()).countUnsynced(userId) }
+            val pending = withContext(Dispatchers.IO) {
+                AppDatabase.get(requireContext()).countUnsynced(userId)
+            }
             if (_binding != null) {
-                binding.tvSync.text = if (pending == 0) "Sincronização: tudo atualizado"
-                else "Sincronização: $pending registo(s) por enviar"
+                if (pending == 0) {
+                    binding.tvSyncStatus.text = "Tudo sincronizado"
+                    binding.tvSyncStatus.setTextColor(Color.parseColor("#15803D"))
+                } else {
+                    binding.tvSyncStatus.text = "$pending pendente(s)"
+                    binding.tvSyncStatus.setTextColor(Color.parseColor("#D97706"))
+                }
             }
         }
+    }
+
+    private fun updateInitials(name: String, email: String) {
+        val initials = when {
+            name.isNotBlank() -> {
+                val parts = name.trim().split("\\s+".toRegex())
+                if (parts.size >= 2) {
+                    "${parts[0].first().uppercaseChar()}${parts[1].first().uppercaseChar()}"
+                } else {
+                    parts[0].take(2).uppercase()
+                }
+            }
+            email.isNotBlank() -> email.take(2).uppercase()
+            else -> "EM"
+        }
+        binding.tvAvatarInitials.text = initials
     }
 
     private fun profilePhotoFile() = File(requireContext().filesDir, "profile_${auth.currentUser?.uid}.jpg")
 
     private fun showAvatar() {
         val file = profilePhotoFile()
-        if (!file.exists()) return
-        val bitmap = ImageUtils.decodeSampled(file.absolutePath, 400) ?: return
-        binding.ivAvatar.setPadding(0, 0, 0, 0)
-        binding.ivAvatar.imageTintList = null
-        binding.ivAvatar.setImageBitmap(bitmap)
+        if (!file.exists()) {
+            binding.ivAvatar.isVisible = false
+            binding.containerAvatarInitials.isVisible = true
+            return
+        }
+        val bitmap = ImageUtils.decodeSampled(file.absolutePath, 400)
+        if (bitmap != null) {
+            binding.ivAvatar.setImageBitmap(bitmap)
+            binding.ivAvatar.isVisible = true
+            binding.containerAvatarInitials.isVisible = false
+        } else {
+            binding.ivAvatar.isVisible = false
+            binding.containerAvatarInitials.isVisible = true
+        }
     }
 
     private fun saveName() {
@@ -90,11 +137,16 @@ class ProfileFragment : Fragment() {
             binding.etName.error = "O nome não pode estar vazio"
             return
         }
+        val user = auth.currentUser
         val request = UserProfileChangeRequest.Builder().setDisplayName(name).build()
-        auth.currentUser?.updateProfile(request)?.addOnCompleteListener { task ->
+        user?.updateProfile(request)?.addOnCompleteListener { task ->
             if (_binding == null) return@addOnCompleteListener
-            val message = if (task.isSuccessful) "Perfil atualizado." else "Não foi possível guardar (sem ligação?)."
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            if (task.isSuccessful) {
+                updateInitials(name, user.email ?: "")
+                Toast.makeText(requireContext(), "Perfil atualizado.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Não foi possível guardar.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
