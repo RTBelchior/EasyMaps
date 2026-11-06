@@ -170,6 +170,14 @@ class MapFragment : Fragment() {
         val map = binding.mapView
         map.overlays.removeAll(occurrenceMarkers)
         occurrenceMarkers.clear()
+
+        val count = occurrences.size
+        binding.tvOccurrencesNearby.text = when (count) {
+            0 -> "Sem ocorrências perto de ti"
+            1 -> "1 ocorrência perto de ti"
+            else -> "$count ocorrências perto de ti"
+        }
+
         for (occurrence in occurrences) {
             val marker = Marker(map).apply {
                 position = GeoPoint(occurrence.latitude, occurrence.longitude)
@@ -271,6 +279,7 @@ class MapFragment : Fragment() {
     private fun render(snapshot: TripTracker.Snapshot) {
         val active = snapshot.state != TripTracker.State.IDLE
         binding.btnStart.isVisible = !active
+        binding.tvOccurrencesNearby.isVisible = !active
         binding.statsRow.isVisible = active
         binding.controlsRow.isVisible = active
         binding.tvStatus.text = when (snapshot.state) {

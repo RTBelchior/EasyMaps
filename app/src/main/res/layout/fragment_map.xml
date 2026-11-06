@@ -1,39 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Map View (OsmDroid) -->
     <org.osmdroid.views.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="wrap_content"
+    <!-- Top Container: Search Bar & Weather Chip -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|start"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp">
+        android:layout_gravity="top"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp">
 
-        <TextView
-            android:id="@+id/tv_weather"
+        <!-- Search Bar Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_search"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="Pesquisar"
+                    android:src="@drawable/ic_search"
+                    app:tint="#64748B" />
+
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="12dp"
+                    android:background="@android:color/transparent"
+                    android:hint="Para onde vais?"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:textColor="#0F172A"
+                    android:textColorHint="#64748B"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Weather Chip Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="8dp"
-            android:text="A obter meteorologia..."
-            android:textSize="13sp"
-            android:textStyle="bold" />
-    </com.google.android.material.card.MaterialCardView>
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
+            app:strokeWidth="0dp">
 
+            <TextView
+                android:id="@+id/tv_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="8dp"
+                android:textColor="#0F172A"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="18 °C · Céu limpo" />
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Bottom Container: FABs & Bottom Trip Control Card -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="vertical">
 
+        <!-- FAB Buttons Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,46 +99,68 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="12dp">
 
+            <!-- Locate / Centrar FAB Button -->
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_locate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:contentDescription="Centrar no mapa"
+                app:backgroundTint="#2563EB"
                 app:fabSize="mini"
-                app:srcCompat="@drawable/ic_my_location" />
+                app:srcCompat="@drawable/ic_my_location"
+                app:tint="#FFFFFF" />
 
+            <!-- Reportar FAB Button -->
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/fab_report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Reportar"
-                app:icon="@drawable/ic_add" />
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                app:backgroundTint="#2563EB"
+                app:icon="@drawable/ic_add"
+                app:iconTint="#FFFFFF" />
         </LinearLayout>
 
+        <!-- Bottom Trip Control Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/bottom_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
             android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="24dp"
-            app:cardElevation="6dp">
+            app:cardElevation="6dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:id="@+id/tv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pronto para partir"
+                    android:textColor="#0F172A"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="Pronto para partir" />
 
+                <TextView
+                    android:id="@+id/tv_occurrences_nearby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="#64748B"
+                    android:textSize="14sp"
+                    tools:text="3 ocorrências perto de ti" />
+
+                <!-- Running Trip Stats Row -->
                 <LinearLayout
                     android:id="@+id/stats_row"
                     android:layout_width="match_parent"
@@ -95,8 +174,22 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Velocidade" android:textSize="12sp" />
-                        <TextView android:id="@+id/tv_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 km/h" android:textSize="22sp" android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Velocidade"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_speed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#0F172A"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="0 km/h" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -104,8 +197,22 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Distância" android:textSize="12sp" />
-                        <TextView android:id="@+id/tv_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 m" android:textSize="22sp" android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Distância"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#0F172A"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="0 m" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -113,18 +220,40 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Duração" android:textSize="12sp" />
-                        <TextView android:id="@+id/tv_duration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00:00" android:textSize="22sp" android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Duração"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#0F172A"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="00:00" />
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Start Trip Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_start"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="12dp"
-                    android:text="Iniciar viagem" />
+                    android:layout_height="54dp"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="#2563EB"
+                    android:text="Iniciar viagem"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="14dp"
+                    app:elevation="2dp" />
 
+                <!-- Running Trip Controls Row -->
                 <LinearLayout
                     android:id="@+id/controls_row"
                     android:layout_width="match_parent"
@@ -137,19 +266,28 @@
                         android:id="@+id/btn_pause"
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="0dp"
-                        android:layout_height="56dp"
+                        android:layout_height="54dp"
                         android:layout_marginEnd="6dp"
                         android:layout_weight="1"
-                        android:text="Pausar" />
+                        android:backgroundTint="#EFF6FF"
+                        android:text="Pausar"
+                        android:textColor="#2563EB"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="14dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_stop"
                         android:layout_width="0dp"
-                        android:layout_height="56dp"
+                        android:layout_height="54dp"
                         android:layout_marginStart="6dp"
                         android:layout_weight="1"
-                        android:backgroundTint="#B91C1C"
-                        android:text="Terminar" />
+                        android:backgroundTint="#DC2626"
+                        android:text="Terminar"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="14dp" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
