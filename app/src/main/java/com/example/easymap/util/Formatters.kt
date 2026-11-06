@@ -20,6 +20,14 @@ object Formatters {
         else String.format(Locale.getDefault(), "%02d:%02d", minutes, secs)
     }
 
+    fun durationShort(seconds: Long): String {
+        val minutes = (seconds / 60).coerceAtLeast(1)
+        if (minutes < 60) return "$minutes min"
+        val hours = minutes / 60
+        val remMin = minutes % 60
+        return if (remMin > 0) "$hours h $remMin min" else "$hours h"
+    }
+
     fun speed(kmh: Double): String = String.format(Locale.getDefault(), "%.0f km/h", kmh)
 
     fun dateTime(millis: Long): String =

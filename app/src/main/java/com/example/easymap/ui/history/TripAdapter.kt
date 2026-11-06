@@ -12,10 +12,12 @@ import com.example.easymap.util.Formatters
 class TripAdapter(private val onClick: (Trip) -> Unit) : RecyclerView.Adapter<TripAdapter.Holder>() {
 
     private var items: List<Trip> = emptyList()
+    private var occurrenceCounts: Map<Long, Int> = emptyMap()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun submit(trips: List<Trip>) {
+    fun submit(trips: List<Trip>, occurrences: Map<Long, Int> = emptyMap()) {
         items = trips
+        occurrenceCounts = occurrences
         notifyDataSetChanged()
     }
 
@@ -26,11 +28,17 @@ class TripAdapter(private val onClick: (Trip) -> Unit) : RecyclerView.Adapter<Tr
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val trip = items[position]
+        val count = occurrenceCounts[trip.id] ?: 0
+        val occurrenceText = when (count) {
+            1 -> "1 ocorrência"
+            else -> "$count ocorrências"
+        }
+
         with(holder.binding) {
-            tvTime.text = "${Formatters.dateTime(trip.startTime)} – ${Formatters.time(trip.endTime)}"
+            tvTime.text = "${Formatters.time(trip.startTime)} – ${Formatters.time(trip.endTime)}"
             tvDistance.text = Formatters.distance(trip.distanceMeters)
             tvRoute.text = "${trip.startName} → ${trip.endName}"
-            tvMeta.text = "${Formatters.duration(trip.durationSeconds)} · média ${Formatters.speed(trip.avgSpeedKmh)}"
+            tvMeta.text = "${Formatters.durationShort(trip.durationSeconds)}   ${Formatters.speed(trip.avgSpeedKmh)}   $occurrenceText"
             root.setOnClickListener { onClick(trip) }
         }
     }

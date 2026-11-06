@@ -1,57 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#F8FAFC"
+    android:clipToPadding="false"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="Histórico"
-        android:textSize="28sp"
-        android:textStyle="bold" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hoje" />
-        <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Semana" />
-        <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mês" />
-    </com.google.android.material.tabs.TabLayout>
-
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="12dp"
-        app:cardCornerRadius="16dp">
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp">
 
+        <!-- Title -->
         <TextView
-            android:id="@+id/tv_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Histórico"
+            android:textColor="#0F172A"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <!-- Segmented Time Filter Tabs -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_tab_container"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/tab_today"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_tab_selected"
+                android:gravity="center"
+                android:text="Hoje"
+                android:textColor="#1D4ED8"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tab_week"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="Semana"
+                android:textColor="#64748B"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tab_month"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="Mês"
+                android:textColor="#64748B"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Summary Chart Card -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="0 km · 0 viagens"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </com.google.android.material.card.MaterialCardView>
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="1dp"
+            app:strokeColor="#E2E8F0"
+            app:strokeWidth="1dp">
 
-    <TextView
-        android:id="@+id/tv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="24dp"
-        android:gravity="center"
-        android:text="Ainda não há viagens neste período."
-        android:visibility="gone" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_trips"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-</LinearLayout>
+                <!-- Header Row -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:text="Os teus deslocamentos"
+                        android:textColor="#0F172A"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_total_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:textColor="#0F172A"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="102 km" />
+                </RelativeLayout>
+
+                <!-- 7-Bar Chart Container -->
+                <LinearLayout
+                    android:id="@+id/chart_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="20dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <!-- Bar 0 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center_horizontal">
+
+                        <View
+                            android:id="@+id/bar_0"
+                            android:layout_width="28dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/bg_chart_bar" />
+                    </LinearLayout>
+
+                    <!-- Bar 1 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center_horizontal">
+
+                        <View
+                            android:id="@+id/bar_1"
+                            android:layout_width="28dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_chart_bar" />
+                    </LinearLayout>
+
+                    <!-- Bar 2 (Active/Peak Bar) -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center_horizontal">
+
+                        <View
+                            android:id="@+id/bar_2"
+                            android:layout_width="28dp"
+                            android:layout_height="72dp"
+                            android:background="@drawable/bg_chart_bar_active" />
+                    </LinearLayout>
+
+                    <!-- Bar 3 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center_horizontal">
+
+                        <View
+                            android:id="@+id/bar_3"
+                            android:layout_width="28dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_chart_bar" />
+                    </LinearLayout>
+
+                    <!-- Bar 4 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center_horizontal">
+
+                        <View
+                            android:id="@+id/bar_4"
+                            android:layout_width="28dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_chart_bar" />
+                    </LinearLayout>
+
+                    <!-- Bar 5 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center_horizontal">
+
+                        <View
+                            android:id="@+id/bar_5"
+                            android:layout_width="28dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/bg_chart_bar" />
+                    </LinearLayout>
+
+                    <!-- Bar 6 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center_horizontal">
+
+                        <View
+                            android:id="@+id/bar_6"
+                            android:layout_width="28dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/bg_chart_bar" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Empty State Text -->
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="Ainda não há deslocamentos registados neste período."
+            android:textColor="#64748B"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <!-- Trips RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_trips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+</ScrollView>
