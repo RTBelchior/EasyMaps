@@ -1,11 +1,13 @@
 package com.example.easymap.ui.auth
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import com.example.easymap.MainActivity
 import com.example.easymap.databinding.ActivityRegisterBinding
 import com.example.easymap.util.applySystemBarsPadding
@@ -25,6 +27,12 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.root.applySystemBarsPadding()
 
+        val loginText = HtmlCompat.fromHtml(
+            "Já tens conta? <font color=\"#2563EB\"><b>Entrar</b></font>",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+        binding.btnBack.text = loginText
+
         binding.btnRegister.setOnClickListener { register() }
         binding.btnBack.setOnClickListener { finish() }
     }
@@ -35,12 +43,30 @@ class RegisterActivity : AppCompatActivity() {
         val password = binding.etPassword.text.toString()
         val confirm = binding.etConfirm.text.toString()
 
-        listOf(binding.tilName, binding.tilEmail, binding.tilPassword, binding.tilConfirm).forEach { it.error = null }
+        val cards = listOf(binding.cardName, binding.cardEmail, binding.cardPassword, binding.cardConfirm)
+        cards.forEach { it.strokeColor = Color.parseColor("#CBD5E1") }
+
         when {
-            name.isEmpty() -> { binding.tilName.error = "Introduz o nome"; return }
-            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> { binding.tilEmail.error = "Email inválido"; return }
-            password.length < 6 -> { binding.tilPassword.error = "Mínimo 6 caracteres"; return }
-            password != confirm -> { binding.tilConfirm.error = "As palavras-passe não coincidem"; return }
+            name.isEmpty() -> {
+                binding.cardName.strokeColor = Color.parseColor("#EF4444")
+                Toast.makeText(this, "Introduz o nome", Toast.LENGTH_SHORT).show()
+                return
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                binding.cardEmail.strokeColor = Color.parseColor("#EF4444")
+                Toast.makeText(this, "Email inválido", Toast.LENGTH_SHORT).show()
+                return
+            }
+            password.length < 6 -> {
+                binding.cardPassword.strokeColor = Color.parseColor("#EF4444")
+                Toast.makeText(this, "Palavra-passe requer no mínimo 6 caracteres", Toast.LENGTH_SHORT).show()
+                return
+            }
+            password != confirm -> {
+                binding.cardConfirm.strokeColor = Color.parseColor("#EF4444")
+                Toast.makeText(this, "As palavras-passe não coincidem", Toast.LENGTH_SHORT).show()
+                return
+            }
         }
 
         binding.btnRegister.isEnabled = false

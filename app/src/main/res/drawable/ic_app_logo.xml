@@ -1,0 +1,56 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+
+    <!-- Background perspective map polygon / tile -->
+    <path
+        android:pathData="M24,78 L64,98 L104,78 L92,54 L36,54 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="24"
+                android:startY="54"
+                android:endX="104"
+                android:endY="98"
+                android:type="linear">
+                <item android:color="#22C55E" android:offset="0.0" />
+                <item android:color="#10B981" android:offset="0.5" />
+                <item android:color="#0EA5E9" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Map road lines -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,78 L104,78 L102,74 L26,74 Z M48,54 L58,95 L62,94 L52,54 Z M36,54 L84,88 L87,84 L40,54 Z" />
+
+    <!-- Map shadow / base border -->
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M24,78 L64,98 L104,78 L104,81 L64,101 L24,81 Z" />
+
+    <!-- Location Pin Pin Head & Body -->
+    <path
+        android:pathData="M64,22 C50.75,22 40,32.75 40,46 C40,62 64,86 64,86 C64,86 88,62 88,46 C88,32.75 77.25,22 64,22 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="40"
+                android:startY="22"
+                android:endX="88"
+                android:endY="86"
+                android:type="linear">
+                <item android:color="#38BDF8" android:offset="0.0" />
+                <item android:color="#0284C7" android:offset="0.5" />
+                <item android:color="#1D4ED8" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Location Pin Center Hole -->
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M64,36 C58.48,36 54,40.48 54,46 C54,51.52 58.48,56 64,56 C69.52,56 74,51.52 74,46 C74,40.48 69.52,36 64,36 Z" />
+</vector>

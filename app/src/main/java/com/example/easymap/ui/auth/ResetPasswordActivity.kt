@@ -1,5 +1,6 @@
 package com.example.easymap.ui.auth
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
@@ -27,11 +28,14 @@ class ResetPasswordActivity : AppCompatActivity() {
 
     private fun sendEmail() {
         val email = binding.etEmail.text.toString().trim()
-        binding.tilEmail.error = null
+        binding.cardEmail.strokeColor = Color.parseColor("#CBD5E1")
+
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.tilEmail.error = "Email inválido"
+            binding.cardEmail.strokeColor = Color.parseColor("#EF4444")
+            Toast.makeText(this, "Email inválido", Toast.LENGTH_SHORT).show()
             return
         }
+
         binding.btnSend.isEnabled = false
         FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener { task ->
             binding.btnSend.isEnabled = true
