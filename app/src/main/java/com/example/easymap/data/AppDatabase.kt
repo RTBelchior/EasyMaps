@@ -118,6 +118,15 @@ class AppDatabase private constructor(context: Context) :
         writableDatabase.update("occurrences", values, "id = ?", arrayOf(id))
     }
 
+    fun deleteOccurrence(id: String) {
+        writableDatabase.delete("occurrences", "id = ?", arrayOf(id))
+    }
+
+    fun deleteExpiredOccurrences(maxAgeMillis: Long = 86_400_000L) {
+        val cutoff = System.currentTimeMillis() - maxAgeMillis
+        writableDatabase.delete("occurrences", "timestamp < ?", arrayOf(cutoff.toString()))
+    }
+
     /** Número de registos (viagens + ocorrências) ainda por sincronizar. */
     fun countUnsynced(userId: String): Int = getUnsyncedTrips(userId).size + getUnsyncedOccurrences(userId).size
 

@@ -23,6 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.easymap.data.OccurrenceRepository
 import com.example.easymap.data.WeatherApi
+import com.example.easymap.databinding.DialogOccurrenceDetailBinding
 import com.example.easymap.databinding.FragmentMapBinding
 import com.example.easymap.model.Category
 import com.example.easymap.model.LatLon
@@ -196,20 +197,41 @@ class MapFragment : Fragment() {
 
     private fun showOccurrenceDialog(occurrence: Occurrence) {
         val context = requireContext()
-        val builder = MaterialAlertDialogBuilder(context)
-            .setTitle(occurrence.category.label)
-            .setMessage("${Formatters.dateTime(occurrence.timestamp)}\n${occurrence.description}")
-            .setPositiveButton("Fechar", null)
+        val dialogBinding = DialogOccurrenceDetailBinding.inflate(layoutInflater)
+
+        dialogBinding.ivCategoryIcon.setImageResource(occurrence.category.iconResId)
+        dialogBinding.tvCategoryTitle.text = occurrence.category.label
+        dialogBinding.tvDatetime.text = Formatters.dateTime(occurrence.timestamp)
+
+        if (occurrence.description.isNotBlank()) {
+            dialogBinding.tvDescription.text = occurrence.description
+            dialogBinding.tvDescription.isVisible = true
+        } else {
+            dialogBinding.tvDescription.isVisible = false
+        }
+
         occurrence.photoPath?.let { path ->
             ImageUtils.decodeSampled(path, 700)?.let { bitmap ->
-                builder.setView(ImageView(context).apply {
-                    setImageBitmap(bitmap)
-                    adjustViewBounds = true
-                    setPadding(32, 16, 32, 0)
-                })
+                dialogBinding.ivPhoto.setImageBitmap(bitmap)
+                dialogBinding.cardPhoto.isVisible = true
             }
         }
-        builder.show()
+
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setView(dialogBinding.root)
+            .create()
+
+        dialogBinding.btnClose.setOnClickListener { dialog.dismiss() }
+        dialogBinding.btnDelete.setOnClickListener {
+            dialog.dismiss()
+            lifecycleScope.launch {
+                OccurrenceRepository(requireContext()).delete(occurrence.id)
+                Toast.makeText(requireContext(), "Ocorrência removida.", Toast.LENGTH_SHORT).show()
+                refreshOccurrences()
+            }
+        }
+
+        dialog.show()
     }
 
     private fun openReport(latitude: Double, longitude: Double, category: Category?) {
@@ -337,14 +359,9 @@ class MapFragment : Fragment() {
             .show()
     }
 
-    /** Sensor de luz: mapa escuro com pouca luz (histerese para não ficar a piscar). */
+    /** Sensor de luz: mantemos as cores naturais do mapa para evitar inverte-lo para tom roxo. */
     private fun onLightChanged(lux: Float) {
-        if (_binding == null) return
-        val dark = if (isDarkMap) lux < 60f else lux < 15f
-        if (dark == isDarkMap) return
-        isDarkMap = dark
-        binding.mapView.overlayManager.tilesOverlay.setColorFilter(if (dark) TilesOverlay.INVERT_COLORS else null)
-        binding.mapView.invalidate()
+        // Sem alteração de filtro de cor automático
     }
 
     // ---------- Permissões ----------

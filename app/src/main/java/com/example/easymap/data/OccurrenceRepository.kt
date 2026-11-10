@@ -23,7 +23,19 @@ class OccurrenceRepository(context: Context) {
 
     suspend fun save(occurrence: Occurrence) = withContext(Dispatchers.IO) { database.upsertOccurrence(occurrence) }
 
-    suspend fun getAll(): List<Occurrence> = withContext(Dispatchers.IO) { database.getOccurrences() }
+    suspend fun getAll(): List<Occurrence> = withContext(Dispatchers.IO) {
+        database.deleteExpiredOccurrences(MAX_AGE_MS)
+        database.getOccurrences()
+    }
+
+    suspend fun delete(occurrenceId: String) = withContext(Dispatchers.IO) {
+        database.deleteOccurrence(occurrenceId)
+        try {
+            FirebaseFirestore.getInstance().collection(COLLECTION).document(occurrenceId).delete().await()
+        } catch (e: Exception) {
+            // Ignora falhas de rede na remoção remota
+        }
+    }
 
     suspend fun uploadPending(userId: String) {
         val pending = withContext(Dispatchers.IO) { database.getUnsyncedOccurrences(userId) }
@@ -90,5 +102,6 @@ class OccurrenceRepository(context: Context) {
 
     private companion object {
         const val COLLECTION = "occurrences"
+        const val MAX_AGE_MS = 86_400_000L // 24 horas de validade das ocorrências
     }
 }

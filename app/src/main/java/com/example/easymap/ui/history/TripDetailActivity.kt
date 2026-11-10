@@ -12,10 +12,10 @@ import com.example.easymap.databinding.ActivityTripDetailBinding
 import com.example.easymap.model.Occurrence
 import com.example.easymap.model.Trip
 import com.example.easymap.util.Formatters
+import com.example.easymap.util.MapTiles
 import com.example.easymap.util.MarkerIcons
 import com.example.easymap.util.applySystemBarsPadding
 import kotlinx.coroutines.launch
-import com.example.easymap.util.MapTiles
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
@@ -25,6 +25,7 @@ import org.osmdroid.views.overlay.Polyline
 class TripDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTripDetailBinding
+    private var tripPoints: List<GeoPoint> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +34,10 @@ class TripDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.root.applySystemBarsPadding()
 
+        binding.btnBack.setOnClickListener { finish() }
         binding.mapView.setTileSource(MapTiles.source)
         binding.mapView.setMultiTouchControls(true)
+        binding.mapView.setBuiltInZoomControls(false)
 
         val tripId = intent.getLongExtra(EXTRA_TRIP_ID, -1L)
         lifecycleScope.launch {
@@ -50,23 +53,30 @@ class TripDetailActivity : AppCompatActivity() {
 
     private fun show(trip: Trip, occurrences: List<Occurrence>) {
         binding.tvRoute.text = "${trip.startName} → ${trip.endName}"
-        binding.tvDate.text = "${Formatters.dateTime(trip.startTime)} – ${Formatters.time(trip.endTime)}"
-        binding.tvStats.text = "${Formatters.distance(trip.distanceMeters)} · ${Formatters.duration(trip.durationSeconds)} · média ${Formatters.speed(trip.avgSpeedKmh)}"
+        binding.tvDate.text = "${Formatters.dateTime(trip.startTime)} · ${Formatters.time(trip.endTime)}"
+        binding.tvDistance.text = Formatters.distance(trip.distanceMeters)
+        binding.tvDuration.text = Formatters.durationShort(trip.durationSeconds)
+        binding.tvAvgSpeed.text = Formatters.speed(trip.avgSpeedKmh)
 
         val nearby = occurrences.filter { occurrence -> isNearRoute(trip, occurrence) }
-        binding.tvNearby.text =
-            if (nearby.isEmpty()) "Sem ocorrências perto do percurso."
-            else "Ocorrências perto do percurso: " + nearby.groupingBy { it.category.label }.eachCount()
+        binding.tvNearby.text = if (nearby.isEmpty()) {
+            "Sem ocorrências perto do percurso."
+        } else {
+            val summary = nearby.groupingBy { it.category.label }.eachCount()
                 .entries.joinToString(", ") { "${it.value} ${it.key.lowercase()}" }
+            "${nearby.size} ocorrência(s): $summary"
+        }
 
-        val points = trip.route.map { GeoPoint(it.latitude, it.longitude) }
-        if (points.isEmpty()) return
+        tripPoints = trip.route.map { GeoPoint(it.latitude, it.longitude) }
+        if (tripPoints.isEmpty()) return
+
         val line = Polyline(binding.mapView).apply {
-            outlinePaint.color = Color.parseColor("#1D4ED8")
+            outlinePaint.color = Color.parseColor("#2563EB")
             outlinePaint.strokeWidth = 12f
-            setPoints(points)
+            setPoints(tripPoints)
         }
         binding.mapView.overlays.add(line)
+
         for (occurrence in nearby) {
             binding.mapView.overlays.add(Marker(binding.mapView).apply {
                 position = GeoPoint(occurrence.latitude, occurrence.longitude)
@@ -74,11 +84,24 @@ class TripDetailActivity : AppCompatActivity() {
                 setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
             })
         }
+
+        binding.btnMapRecenter.setOnClickListener { recenterMap() }
+        recenterMap()
+    }
+
+    private fun recenterMap() {
+        if (tripPoints.isEmpty()) return
         binding.mapView.post {
-            if (points.size > 1) binding.mapView.zoomToBoundingBox(BoundingBox.fromGeoPoints(points), true, 120)
-            else {
-                binding.mapView.controller.setZoom(17.0)
-                binding.mapView.controller.setCenter(points.first())
+            if (tripPoints.size > 1) {
+                try {
+                    binding.mapView.zoomToBoundingBox(BoundingBox.fromGeoPoints(tripPoints), true, 120)
+                } catch (e: Exception) {
+                    binding.mapView.controller.setZoom(16.0)
+                    binding.mapView.controller.setCenter(tripPoints.first())
+                }
+            } else {
+                binding.mapView.controller.setZoom(16.0)
+                binding.mapView.controller.setCenter(tripPoints.first())
             }
         }
     }

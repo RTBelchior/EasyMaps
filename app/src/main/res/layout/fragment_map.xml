@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Top Container: Search Bar & Weather Chip -->
+    <!-- Top Container: Weather Chip -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,51 +20,11 @@
         android:paddingHorizontal="16dp"
         android:paddingTop="16dp">
 
-        <!-- Search Bar Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_search"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="Pesquisar"
-                    android:src="@drawable/ic_search"
-                    app:tint="#64748B" />
-
-                <EditText
-                    android:id="@+id/et_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:background="@android:color/transparent"
-                    android:hint="Para onde vais?"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:textColor="#0F172A"
-                    android:textColorHint="#64748B"
-                    android:textSize="15sp" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
         <!-- Weather Chip Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp"

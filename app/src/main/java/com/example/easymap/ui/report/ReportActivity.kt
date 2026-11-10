@@ -235,6 +235,13 @@ class ReportActivity : AppCompatActivity() {
     private fun setupPhotoAndSubmit() {
         binding.btnPhoto.setOnClickListener { launchCamera() }
         binding.btnSubmit.setOnClickListener { submit() }
+        binding.etDescription.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.root.postDelayed({
+                    binding.root.fullScroll(View.FOCUS_DOWN)
+                }, 200)
+            }
+        }
     }
 
     private fun launchCamera() {

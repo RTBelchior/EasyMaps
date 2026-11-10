@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Category Header Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_category_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="Categoria"
+            tools:src="@drawable/ic_cat_hazard" />
+
+        <TextView
+            android:id="@+id/tv_category_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="#0F172A"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="Perigo" />
+    </LinearLayout>
+
+    <!-- Date & Time -->
+    <TextView
+        android:id="@+id/tv_datetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#64748B"
+        android:textSize="13sp"
+        tools:text="12/05/2024 14:30" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="#0F172A"
+        android:textSize="15sp"
+        tools:text="Buraco grave na faixa da direita." />
+
+    <!-- Photo Container -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_photo"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#CBD5E1"
+        app:strokeWidth="1dp">
+
+        <ImageView
+            android:id="@+id/iv_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Fotografia"
+            android:scaleType="centerCrop" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_delete"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="Remover"
+            android:textColor="#DC2626"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp"
+            app:strokeColor="#DC2626"
+            app:strokeWidth="1.5dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_close"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:backgroundTint="#2563EB"
+            android:text="Fechar"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp" />
+    </LinearLayout>
+</LinearLayout>
