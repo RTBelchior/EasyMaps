@@ -5,42 +5,37 @@
     android:viewportWidth="128"
     android:viewportHeight="128">
 
-    <!-- Background perspective map polygon / tile -->
+    <!-- 3D Map Base Tile (Ground) -->
     <path
-        android:pathData="M24,78 L64,98 L104,78 L92,54 L36,54 Z">
+        android:pathData="M22,76 C20,76 18,78 19,80 L22,82 C24,85 30,89 42,94 L62,102 C63.5,102.5 65.5,102.5 67,102 L87,94 C99,89 105,85 107,82 L110,80 C111,78 109,76 107,76 L92,54 C91,52.5 89,51.5 87,51.5 L42,51.5 C40,51.5 38,52.5 37,54 Z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:startX="24"
-                android:startY="54"
-                android:endX="104"
-                android:endY="98"
+                android:startX="22"
+                android:startY="51"
+                android:endX="108"
+                android:endY="102"
                 android:type="linear">
                 <item android:color="#22C55E" android:offset="0.0" />
-                <item android:color="#10B981" android:offset="0.5" />
+                <item android:color="#10B981" android:offset="0.4" />
                 <item android:color="#0EA5E9" android:offset="1.0" />
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- Map road lines -->
+    <!-- White Road Lines on Map Tile -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M24,78 L104,78 L102,74 L26,74 Z M48,54 L58,95 L62,94 L52,54 Z M36,54 L84,88 L87,84 L40,54 Z" />
+        android:pathData="M22,76 L106,76 L104,72 L24,72 Z M46,51.5 L56,92 L60,91 L50,51.5 Z M36,51.5 L84,86 L87,82 L40,51.5 Z" />
 
-    <!-- Map shadow / base border -->
+    <!-- Location Pin Body (Gradient Sky Blue to Royal Blue) -->
     <path
-        android:fillColor="#1E3A8A"
-        android:pathData="M24,78 L64,98 L104,78 L104,81 L64,101 L24,81 Z" />
-
-    <!-- Location Pin Pin Head & Body -->
-    <path
-        android:pathData="M64,22 C50.75,22 40,32.75 40,46 C40,62 64,86 64,86 C64,86 88,62 88,46 C88,32.75 77.25,22 64,22 Z">
+        android:pathData="M64,18 C49.5,18 38,29.5 38,44 C38,61.5 64,88 64,88 C64,88 90,61.5 90,44 C90,29.5 78.5,18 64,18 Z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:startX="40"
-                android:startY="22"
-                android:endX="88"
-                android:endY="86"
+                android:startX="38"
+                android:startY="18"
+                android:endX="90"
+                android:endY="88"
                 android:type="linear">
                 <item android:color="#38BDF8" android:offset="0.0" />
                 <item android:color="#0284C7" android:offset="0.5" />
@@ -51,6 +46,6 @@
 
     <!-- Location Pin Center Hole -->
     <path
-        android:fillColor="#0F172A"
-        android:pathData="M64,36 C58.48,36 54,40.48 54,46 C54,51.52 58.48,56 64,56 C69.52,56 74,51.52 74,46 C74,40.48 69.52,36 64,36 Z" />
+        android:fillColor="#001242"
+        android:pathData="M64,33 C58,33 53,38 53,44 C53,50 58,55 64,55 C70,55 75,50 75,44 C75,38 70,33 64,33 Z" />
 </vector>
