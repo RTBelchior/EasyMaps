@@ -359,9 +359,14 @@ class MapFragment : Fragment() {
             .show()
     }
 
-    /** Sensor de luz: mantemos as cores naturais do mapa para evitar inverte-lo para tom roxo. */
+    /** Sensor de luz: ativa o modo noturno (filtro invertido no mapa) quando há pouca luminosidade. */
     private fun onLightChanged(lux: Float) {
-        // Sem alteração de filtro de cor automático
+        if (_binding == null) return
+        val dark = if (isDarkMap) lux < 60f else lux < 15f
+        if (dark == isDarkMap) return
+        isDarkMap = dark
+        binding.mapView.overlayManager.tilesOverlay.setColorFilter(if (dark) TilesOverlay.INVERT_COLORS else null)
+        binding.mapView.invalidate()
     }
 
     // ---------- Permissões ----------
